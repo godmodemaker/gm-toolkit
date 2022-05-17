@@ -1,0 +1,109 @@
+=============================================================================================
+What is ResizeEnable
+=============================================================================================
+It's a very ugly system hack that sits in your system tray and attempts to make windows
+that can't usually be resized, resizeable.
+
+
+=============================================================================================
+Why was it written?
+=============================================================================================
+It was written following a request from a friend. He runs his PC at a screen resolution above 
+1280x1024, and was fed up with having to pick items from a list that could only display three
+items because the window didn't take into account the screen resolution, hence only occupying 
+about 20% of the desktop 'real-estate'.
+
+
+=============================================================================================
+How does it work?
+=============================================================================================
+ResizeEnable sits in the background and attaches itself into Windows via three 'Hooks'.
+The first hook is so that it can see which windows are created/destroyed, in which it attempts
+to alter the window's style so that it can be resized.
+The second hook intercepts all messages for every single window to see if it is a message
+associated with resizing a window that it has previously altered the style of. If the message
+is associated with sizing, it then resizes all the child windows (Buttons, Edit boxes and so on)
+simply by scaling them to fit the new windows size. Its ugly, but most of the time it works ok.
+The third hook spots whether the mouse has been pressed in the 'sizing area' of a window and
+takes care of doing all the work of resizing the window. This hook didn't exist in v1.0 but
+has been added to make even more windows resize properly.
+
+
+=============================================================================================
+How do I use it?
+=============================================================================================
+1) Run the ResizeEnableRunner.exe
+2) Find a window that you could never resize and move the cursor over the edge of the window.
+3) Hopefully the pointer will change to one that shows you can resize the window.
+4) Click-drag the window to a new size and release the mouse button.
+
+
+=============================================================================================
+Known problems
+=============================================================================================
+1) Most applications will respond to having their windows resized ok. Well, applications that 
+	have followed the guidelines will. <grin>
+2) Some applications have, shall we say, problems, when their window has been resized and all
+	sort of visual chaos will be revealed.
+3) Some applications won't respond at all, which is rather strange!
+4) Certain windows will 'jiggle' as you attempt to resize them, seemingly resizing and then
+	snapping back to their original size. This is annoying, but we're not sure what is
+	causing it.
+5) Some versions of Internet Explorer, coupled with certain version of Windows98/NT seemed to 
+	crash with v1.0 of ResizeEnable. We don't have that setup on any of our test machines
+	so we can't test it. But, we have done a little bit more work so ResizeEnable is a
+	bit more choosy as to which windows it can work with. So it -might- not crash anymore.
+	If it still crashes, then all we can suggest at the moment is that you upgrade to
+	Internet Explorer 6. We're not Microsoft pushers, but Internet Explorer 6 has better
+	error reporting and shouldn't just explode without warning.
+6) Some Microsoft applications have dialogs that can be resized, but none of their contents
+	move. This is down to the fact that the contents of the dialog ARE NOT STANDARD 
+	MICROSOFT CONTROLS! They are some bastardisation written specially for the application.
+	They may look like normal buttons/drop downs, but they sure as heck aren't! Hence,
+	ResizeEnable can't tell them to move or resize. Yet again, Microsoft ignore their own
+	codebase and reinvent the wheel. And people wonder why their applications are so big..
+
+
+=============================================================================================
+Contact details
+=============================================================================================
+This small hack is completely and utterly free and we accept no responsibility if it causes
+something to misbehave! It -=IS=- a HACK! Theoretically the worst that can happen is that
+a windows contents will go a little AWOL, but re-opening the window should sort it out.
+
+If you want features adding, or fancy contributing a bit of cash to keep us in Beer and
+Ben&Jerrys, or just want to let us know that you use it, then get in touch.
+
+The email is
+	orm@digitallis.co.uk
+
+The website, where we'll stick new versions if we do any, is
+	www.digitallis.co.uk
+
+
+=============================================================================================
+Version history
+=============================================================================================
+	v1.4	29/12/03 - Double sizing bug on Windows2000 fixed (again).
+			 - Will learn about windows that can size themselves and not interfere 
+			 -	with them again whilst the window isn't destroyed.
+			 - Will learn about windows that reset themselves and change the cursor
+			 -	to indicate you can't size them.
+			 - -noicon commandline flag to boot without tray icon.
+	v1.3	07/03/02 - No longer causing PSP to crash.
+			 - Complete alteration in the way it works. This may cause some
+			 - 	'double sizing' problems on Windows2000, but it all seems ok.
+	v1.2	17/02/02 - Attempting to make windows resizeable that have already been created.
+			 - Windows2000 'double sizing' bug fixed.
+	v1.1	18/12/01 - More windows covered, but still not all.
+			 - Being more picky as to which windows it lets through into resizing. 
+	v1.0	30/11/01 - First version. It seems to be doing what it was meant to do!
+
+
+Cheers!
+
+()rm..
+Digi Tallis.
+29th December 2003
+
+
