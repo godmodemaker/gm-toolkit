@@ -1,0 +1,1 @@
+if @opponent && !Input.trigger?(Input::CTRL) # GM - Catch Trainer Pokemon

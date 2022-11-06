@@ -1,0 +1,42 @@
+def pbExtractPBS
+  directory_name = "IDs"
+  Dir.mkdir(directory_name) unless File.exists?(directory_name)
+  pbSaveIdFile(:Species, "IDs/PokemonList.txt")
+  pbSaveIdFile(:Item, "IDs/ItemsList.txt")
+  pbSaveIdFile(:Move, "IDs/MoveList.txt")
+  pbSaveIdFile(:Ability, "IDs/AbilityList.txt")
+  pbMakeTrigger
+  pbMessage(_INTL("ID Files Generated"))
+end
+
+def pbMakeTrigger
+  file = File.open("IDs/trigger.txt","w")
+  file.puts 1
+  file.close
+end
+
+def pbExtractDataFromGameData(game_data)
+  if !GameData.const_defined?(game_data.to_sym)
+    raise _INTL("Couldn't find class {1} in module GameData.", game_data.to_s)
+  end
+  game_data_module = GameData.const_get(game_data.to_sym)
+  data_list = []
+  game_data_module.each do |data|
+    data_list.push(data.id)
+  end
+  return data_list
+end
+
+def pbSaveIdFile(game_data, file_name)
+  data_list = pbExtractDataFromGameData(game_data)
+  file = File.new(file_name, 'w')
+  i = 1
+  max_digits = data_list.length.to_s.length
+  data_list.each do |data|
+    id = i.to_s.rjust(max_digits, '0')
+    output = "#{id} #{data}"
+    file.puts output
+    i += 1
+  end
+  file.close
+end

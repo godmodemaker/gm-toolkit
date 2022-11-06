@@ -1,0 +1,156 @@
+def pbChoosePokemonID
+  maxNum=GameData::Species.count
+  helpText="Input the Pokemon ID from the file named 'PokemonList'"
+  Kernel.pbMessage(_INTL("Script added by youtube.com/godmodemaker"))
+  sp=ChooseNumberParams.new
+  sp.setRange(1, maxNum)
+  sp.setInitialValue(1)
+  sp.setCancelValue(0)
+  output=Kernel.pbMessageChooseNumber(_INTL(helpText),sp)
+  return (output == 0 ? nil : output)
+end
+
+def pbChooseItemID
+  maxNum=GameData::Item.count
+  helpText="Input the Item ID from the file named 'ItemList'"
+  Kernel.pbMessage(_INTL("Script added by youtube.com/godmodemaker"))
+  sp=ChooseNumberParams.new
+  sp.setRange(1, maxNum)
+  sp.setInitialValue(1)
+  sp.setCancelValue(0)
+  output=Kernel.pbMessageChooseNumber(_INTL(helpText),sp)
+  return (output == 0 ? nil : output)
+end
+
+def pbChooseMoveID
+  maxNum=GameData::Move.count
+  helpText="Input the Move ID from the file named 'MoveList'"
+  Kernel.pbMessage(_INTL("Script added by youtube.com/godmodemaker"))
+  sp=ChooseNumberParams.new
+  sp.setRange(1, maxNum)
+  sp.setInitialValue(1)
+  sp.setCancelValue(0)
+  output=Kernel.pbMessageChooseNumber(_INTL(helpText),sp)
+  return (output == 0 ? nil : output)
+end
+
+def pbTeleport
+  pbFadeOutIn(99999)  {
+    $game_variables[{VAR_MAP_ID_OLD}]=$game_map.map_id
+    $game_variables[{VAR_PLAYER_X}]=$game_player.x
+    $game_variables[{VAR_PLAYER_Y}]=$game_player.y
+    $game_temp.player_new_map_id={MAP_ID_NEW}
+    $game_temp.player_new_x={PLAYER_X_NEW}
+    $game_temp.player_new_y={PLAYER_Y_NEW}
+    $game_temp.player_new_direction=2
+    $scene.transfer_player
+    }
+  $game_map.refresh
+  $game_variables[{VAR_CHECK}]=1
+end
+
+def pbTeleportBack
+  pbFadeOutIn(99999)  {
+    $game_temp.player_new_map_id=$game_variables[{VAR_MAP_ID_OLD}]
+    $game_temp.player_new_x=$game_variables[{VAR_PLAYER_X}]
+    $game_temp.player_new_y=$game_variables[{VAR_PLAYER_Y}]
+    $game_temp.player_new_direction=2
+    $scene.transfer_player
+    }
+  $game_map.refresh
+  $game_variables[{VAR_CHECK}]=0
+end
+
+DEFAULT_FRAME_RATE = Graphics.frame_rate
+
+def pbGodSpeed
+  if Graphics.frame_rate==DEFAULT_FRAME_RATE
+    Graphics.frame_rate=DEFAULT_FRAME_RATE*4
+    Kernel.pbMessage(_INTL("\\ts[3] God Speed Enabled \\^"))
+    return
+  else
+    Graphics.frame_rate=DEFAULT_FRAME_RATE
+    Kernel.pbMessage(_INTL("\\ts[1] God Speed Disabled \\^"))
+    return
+  end
+end
+
+def pbToggleDebugMode
+  if $DEBUG
+    $DEBUG = false
+    Kernel.pbMessage(_INTL("Debug Mode Deactivated"))
+  else
+    $DEBUG = true
+    Kernel.pbMessage(_INTL("Debug Mode Activated"))
+  end
+end
+
+def pbInstantPartyHeal
+  for i in $Trainer.party
+    i.heal
+  end
+  Kernel.pbMessage(_INTL("All Party Pokemons were Healed!"))
+end
+
+def pbNewSelectStyle
+  if not File.file?("IDs/trigger.txt")
+    file = File.new("IDs/trigger.txt","w")
+    file.puts 1 #1 Means Enabled
+    file.close
+    pbNewListStyle
+  else
+    trigger = File.read("IDs/trigger.txt").to_i
+    return(trigger == 1)
+  end
+end
+
+def pbToggleSelectStyle
+  trigger = File.read("IDs/trigger.txt").to_i
+  if trigger==1
+    file = File.open("IDs/trigger.txt","w")
+    file.puts 0
+    file.close
+    Kernel.pbMessage(_INTL("List Style selected to List Mode"))
+  else
+    file = File.open("IDs/trigger.txt","w")
+    file.puts 1
+    file.close
+    Kernel.pbMessage(_INTL("List Style selected to ID Mode"))
+  end
+end
+
+def pbAddStorageBoxes
+  helpText="Enter the number of Pokemon Storage Boxes you need"
+  sp=ChooseNumberParams.new
+  sp.setRange(1, 99)
+  sp.setInitialValue(1)
+  sp.setCancelValue(0)
+  n=Kernel.pbMessageChooseNumber(_INTL(helpText),sp)
+  $PokemonStorage.addBox(n)
+end
+
+def pbGetAllPokemonLevel
+  helpText="What level do you want them to be?"
+  sp=ChooseNumberParams.new
+  sp.setRange(1, GameData::GrowthRate.max_level)
+  sp.setInitialValue(1)
+  sp.setCancelValue(0)
+  n=Kernel.pbMessageChooseNumber(_INTL(helpText),sp)
+  return n
+end
+
+def pbGetAllPokemon
+  level=pbGetAllPokemonLevel
+  for i in 1..GameData::Species.count
+    begin
+      a = GameData::Species.get(pbGetNameFromID(i,0)).name
+    rescue
+      a = ""
+    end
+    if a != ""
+      begin
+        pbAddPokemonSilent(GameData::Species.get(pbGetNameFromID(i,0)),level)
+      end
+    end
+  end
+end

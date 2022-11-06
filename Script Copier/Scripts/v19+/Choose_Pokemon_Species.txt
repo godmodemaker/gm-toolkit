@@ -1,0 +1,6 @@
+def pbChooseSpeciesList(default = nil) # GM - Species ID
+  return pbGetNameFromID(pbChoosePokemonID,0) if pbNewSelectStyle
+  return pbChooseFromGameDataList(:Species, default) { |data|
+    next (data.form > 0) ? nil : data.real_name
+  }
+end

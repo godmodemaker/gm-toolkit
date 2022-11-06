@@ -1,0 +1,28 @@
+# ------------------------------------------------------------------------------
+# This function is responsible for generating a serialized array of arrays that
+# contains all of the 'real_names' of Species, Items, and Moves.
+# ------------------------------------------------------------------------------
+
+def pbGenerateDataFile
+  name_list = []
+  name_list.push(pbExtractDataFromGameData(:Species))
+  name_list.push(pbExtractDataFromGameData(:Item))
+  name_list.push(pbExtractDataFromGameData(:Move))
+  file = File.new('Data/gm_ids.dat', 'wb')
+  Marshal.dump(name_list, file)
+  file.close
+end
+
+# ------------------------------------------------------------------------------
+# This function loads the serialized IDs and then returns the real_name of the
+# Species (type: 0), Items (type: 1) and Moves (type: 2) which can be used in
+# functions that require the real_name such as pbAddPokemon.
+# ------------------------------------------------------------------------------
+
+def pbGetNameFromID(id, type)
+  return nil if id.nil?
+  file = File.open('Data/gm_ids.dat', 'rb')
+  gm_ids = Marshal.load(file)
+  file.close
+  return gm_ids[type][id-1]
+end

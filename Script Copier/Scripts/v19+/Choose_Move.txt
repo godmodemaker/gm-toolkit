@@ -1,0 +1,4 @@
+def pbChooseMoveList(default = nil) # GM - Move ID
+  return pbGetNameFromID(pbChooseMoveID,2) if pbNewSelectStyle
+  return pbChooseFromGameDataList(:Move, default)
+end

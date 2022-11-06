@@ -1,0 +1,39 @@
+#===============================================================================
+# God Mode Stuff
+#===============================================================================
+
+MenuHandlers.add(:debug_menu, :god_mode_menu, {
+  "name"        => _INTL("God Mode Menu..."),
+  "parent"      => :main,
+  "description" => _INTL("Selection Style, ID Generation, Serializer, etc.")
+})
+
+# GM - Toggle Select Style
+MenuHandlers.add(:debug_menu, :toggle_selection_mode, {
+  "name" => _INTL("Toggle Selection Style"),
+  "parent" => :god_mode_menu,
+  "description" => _INTL("Toggle between the ID based & List based selections"),
+  "effect" => proc {
+    pbToggleSelectStyle
+  }
+})
+
+# GM - Extract IDs
+MenuHandlers.add(:debug_menu, :generate_ids, {
+  "name" => _INTL("Generate IDs Folder"),
+  "parent" => :god_mode_menu,
+  "description" => _INTL("Extract the IDs from the Game Data"),
+  "effect" => proc {
+    pbExtractPBS
+  }
+})
+
+# GM - Generate the IDs Data File
+MenuHandlers.add(:debug_menu, :generate_gm_ids, {
+  "name" => _INTL("Generate Serialized Data"),
+  "parent" => :god_mode_menu,
+  "description" => _INTL("Generates the serialized gm_ids.dat file"),
+  "effect" => proc {
+    pbGenerateDataFile
+  }
+})

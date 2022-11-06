@@ -6,8 +6,10 @@ import codecs
 import pyperclip
 import zlib
 from base64 import b64encode
-from os import system
+from os import system, listdir, mkdir
+from os.path import realpath, dirname
 from pyfiglet import Figlet
+from rich import print
 
 # =============================================================================
 # METHODS FOR VISUALS
@@ -17,7 +19,7 @@ def print_banner():
   figlet = Figlet(font='big', width=150)
   banner = figlet.renderText(' GODMODE SCRIPT V3')
   print('')
-  print(banner)
+  print(f'[white]{banner}[/white]')
 
 def clear_screen():
   system('cls')
@@ -186,7 +188,7 @@ def pbGetAllPokemon
   end
 end''')
   pyperclip.copy(script)
-  print("[i] Copied\n")
+  print("\[i] Copied\n")
 
 # =============================================================================
 
@@ -209,7 +211,7 @@ def pauseMenu():
       action()
       pauseMenu()
     elif option == '0':
-      print("[i] Exiting Pause Menu Choices...\n")
+      print("\[i] Exiting Pause Menu Choices...\n")
     else:
       print("[!] Invalid Input: Entered value must be between 0 & 3 only")
       pauseMenu()
@@ -219,7 +221,7 @@ def pauseMenu():
 
 def initialize():
   pyperclip.copy('''cmdTeleport=-1\n\t\tcmdTeleportBack=-1''')
-  print("[i] Copied\n")
+  print("\[i] Copied\n")
 
 def add_menu():
   pyperclip.copy('''if $game_variables['''+str(checkVariable)+''']==0
@@ -227,7 +229,7 @@ def add_menu():
     else
       commands[cmdTeleportBack=commands.length]=_INTL("Teleport Back")
     end''')
-  print("[i] Copied\n")
+  print("\[i] Copied\n")
 
 def action():
   pyperclip.copy('''elsif cmdTeleport>=0 && command==cmdTeleport
@@ -236,7 +238,7 @@ def action():
       elsif cmdTeleportBack>=0 && command==cmdTeleportBack
         pbTeleportBack
         break''')
-  print("[i] Copied\n")
+  print("\[i] Copied\n")
 
 # =============================================================================
 
@@ -252,11 +254,11 @@ def controls():
       control_action()
       controls()
     elif option == '2':
-      print("[i] Go to Key Initializing script page (Usually, PokemonControls) to add the keys!")
+      print("\[i] Go to Key Initializing script page (Usually, PokemonControls) to add the keys!")
       addNewKeys()
       controls()
     elif option == '0':
-      print("[i] Exiting Control Choices Menu...\n")
+      print("\[i] Exiting Control Choices Menu...\n")
     else:
       print("[!] Invalid Input: Value must only be 0,1, or 2\n")
       controls()
@@ -284,25 +286,25 @@ def control_action():
     if trigger?(Input::F11)
       pbToggleSelectStyle
     end''')
-  print("[i] Copied\n")
+  print("\[i] Copied\n")
 
 def addNewKeys():
-  print("[i] Paste the Copied Text after the last Initialization in 'module Input'")
+  print("\[i] Paste the Copied Text after the last Initialization in 'module Input'")
   pyperclip.copy(f"F10 = {lastValue+1}\n  F11 = {lastValue+2}")
   input("[=] Press Enter when you are done...")
-  print("[i] In 'def self.buttonToKey(button) > case button', add the copied text under the last Initialization.\n")
+  print("\[i] In 'def self.buttonToKey(button) > case button', add the copied text under the last Initialization.\n")
   pyperclip.copy("when Input::F10\n        return [0x79]\n      when Input::F11\n        return [0x7A]")
 
 # =============================================================================
 
 def splitter():
   pyperclip.copy("#====================================[ GMM ]====================================")
-  print("[i] Copied\n")
+  print("\[i] Copied\n")
 
 # =============================================================================
 
 def pbsExtractor():
-  print("[i] Copied\n")
+  print("\[i] Copied\n")
   pyperclip.copy('''def pbExtractPBS
   directory_name = "IDs"
   Dir.mkdir(directory_name) unless File.exists?(directory_name)
@@ -376,17 +378,17 @@ end''')
 # =============================================================================
 
 def catchTrainerPokemon():
-  print("[i] Go to the PokeBattle_Battle script page")
-  print("[i] Find 'if @opponent && (!pbIsSnagBall?(ball) || !battler.isShadow?)'")
+  print("\[i] Go to the PokeBattle_Battle script page")
+  print("\[i] Find 'if @opponent && (!pbIsSnagBall?(ball) || !battler.isShadow?)'")
   pyperclip.copy("if @opponent && !Input.trigger?(Input::CTRL)")
-  print("[i] And then replace the line with the copied text...\n")
+  print("\[i] And then replace the line with the copied text...\n")
 
 # =============================================================================
 
 def addStorageBox():
-  print("[i] Go to PokemonStorage > class PokemonStorage")
-  print("[i] Add the copied function to the class")
-  print("[i] Add a new event that uses the function")
+  print("\[i] Go to PokemonStorage > class PokemonStorage")
+  print("\[i] Add the copied function to the class")
+  print("\[i] Add a new event that uses the function")
   pyperclip.copy('''def addBox(n=1)
     for i in 1..n
       @boxes.push(PokemonBox.new(_ISPRINTF("Box " + (maxBoxes+1).to_s), maxPokemon(0)))
@@ -395,7 +397,9 @@ def addStorageBox():
 
 # =============================================================================
 
-def main(obfuscation=False):
+def main(nineteen_plus=False):
+  if nineteen_plus:
+    main_new()
   print("[+] Available Options:")
   print("   [1] Scripts Page")
   print("   [2] Pause Menu Codes")
@@ -410,7 +414,7 @@ def main(obfuscation=False):
   print('')
   if choice.isnumeric():
     if choice == '0': # Exit
-      print("\n[i] Stopped Input Mode...\n\n[!] Exiting Program\n")
+      print("\n\[i] Stopped Input Mode...\n\n[!] Exiting Program\n")
     elif choice == '1':
       scriptPage()
       main()
@@ -445,17 +449,150 @@ def main(obfuscation=False):
 
 # =============================================================================
 
+def create_god_mode_plugin():
+  plugins_path = input("[=] Enter Path to Plugins Folder: ") + "\\God Mode"
+  print("")
+  mkdir(plugins_path)
+  scripts_path = f"{script_directory}\\Scripts\\v19+\\Plugins"
+  script_list = listdir(scripts_path)
+  for script in script_list:
+    with open(f"{scripts_path}\\{script}", "r") as f:
+      data = variables_to_values(f.read())
+    script_file_name = script
+    if script != "meta.txt":
+      script_file_name = script.replace(".txt", ".rb")
+    with open(f"{plugins_path}\\" + script_file_name, 'w') as f:
+      f.write(data)
+  print("[!] [green]Created Plugins Scripts in Given Directory.[/green]\n")
+
+# =============================================================================
+
+def open_script_new(script):
+  script_list = {
+    '2': 'Catch_Trainer_Pokemon.txt',
+    '3': 'Choose_Move.txt',
+    '4': 'Choose_Pokemon_Species.txt',
+    '5': 'Debug_Add_Item.txt',
+    '6': 'Debug_God_Mode.txt',
+    '7': 'Menu_Teleport.txt'
+  }
+  path_nineteen = "./Scripts/v19+/"
+  with open(path_nineteen + script_list[script], 'r') as f:
+    return f.read()
+
+def variables_to_values(data):
+  VAR_CHECK = checkVariable
+  VAR_MAP_ID_OLD, VAR_PLAYER_X, VAR_PLAYER_Y = range(
+    checkVariable + 1, checkVariable + 4
+  )
+  MAP_ID_NEW = mapid
+  PLAYER_X_NEW, PLAYER_Y_NEW = player_loc_x, player_loc_y
+  val_list = [
+    VAR_CHECK, VAR_MAP_ID_OLD, VAR_PLAYER_X, VAR_PLAYER_Y, MAP_ID_NEW,
+    PLAYER_X_NEW, PLAYER_Y_NEW
+  ]
+  var_list = [
+    "{VAR_CHECK}", "{VAR_MAP_ID_OLD}", "{VAR_PLAYER_X}", "{VAR_PLAYER_Y}",
+    "{MAP_ID_NEW}", "{PLAYER_X_NEW}", "{PLAYER_Y_NEW}"
+  ]
+  for i in range(len(var_list)):
+    data = data.replace(var_list[i], str(val_list[i]))
+  return data
+
+# =============================================================================
+
+def main_new():
+  print("[+] Available Options:")
+  print("   [1] Create God Mode Plugin")
+  print("   [2] Catch Trainer Pokemon")
+  print("   [3] Choose Move Modification")
+  print("   [4] Choose Pokemon Modification")
+  print("   [5] Debug: Add Items Modification")
+  print("   [6] Debug: God Mode Scripts")
+  print("   [7] Pause Menu Modification")
+  print("   [8] Clear Screen")
+  print("   [0] Exit Script\n")
+  choice = input("Your Choice: ")
+  print('')
+  data_copy = lambda c: pyperclip.copy(variables_to_values(open_script_new(c)))
+  if choice == '0':
+    print("\n\[i] Stopped Input Mode...\n\n[!] Exiting Program\n")
+  elif choice == '1':
+    create_god_mode_plugin()
+    main_new()
+  elif choice == '2':
+    data_copy(choice)
+    print("[!] Script Name: [i]Battle_CatchAndStoreMixin[/i]")
+    print("    Search Term: [green]!(GameData::Item.get(ball).is_snag_ball?[/green]")
+    print("    Instruction: Add copied line before Search Term, indent & end.")
+    print("")
+    main_new()
+  elif choice == '3':
+    data_copy(choice)
+    print("[!] Script Name: [i]Editor_Utilities[/i]")
+    print("    Search Term: [green]def pbChooseMoveList(default = nil)[/green]")
+    print("    Instruction: Replace the function with the copied function.")
+    print("")
+    main_new()
+  elif choice == '4':
+    data_copy(choice)
+    print("[!] Script Name: [i]Editor_Utilities[/i]")
+    print("    Search Term: [green]def pbChooseSpeciesList(default = nil)[/green]")
+    print("    Instruction: Replace the function with the copied function.")
+    print("")
+    main_new()
+  elif choice == '5':
+    data_copy(choice)
+    print("[!] Script Name: [i]Debug_MenuCommands[/i]")
+    print("    Search Term: [green]MenuHandlers.add(:debug_menu, :add_item, {[/green]")
+    print("    Instruction: Replace the whole MenuHandler with the copied one.")
+    print("")
+    main_new()
+  elif choice == '6':
+    data_copy(choice)
+    print("[!] Script Name: [i]Debug_MenuCommands[/i]")
+    print("    Search Term: None")
+    print("    Instruction: Add the copied text to the bottom of the Script.")
+    print("")
+    main_new()
+  elif choice == '7':
+    data_copy(choice)
+    print("[!] Script Name: [i]UI_PauseMenu[/i]")
+    print("    Search Term: [green]MenuHandlers.add(:pause_menu, :debug, {[/green]")
+    print("    Instruction: Paste the copied text after the Searched MenuHandler.")
+    print("")
+    main_new()
+  elif choice == '8':
+    clear_screen()
+    print_banner()
+    main_new()
+  else:
+    print("\n[!] Invalid Input: Only values between 0 & 8 Allowed\n")
+    main_new()
+
+# =============================================================================
+
 if __name__ == "__main__":
   print_banner()
-  print("[i] Made by: Ishaan Pathak\n")
-  print("[i] Starting Input Mode...\n")
+  print("\[i] Made by: Ishaan Pathak\n")
+  print("\[i] Starting Input Mode...\n")
+
+  # Checking if Game is v19 Above. True means the game is v19+
+  version_nineteen_plus = input(
+    "\n[=] Is the game using Essentials v19 or Above? [y/N]: "
+  ).lower() == 'y'
+
+  script_directory = realpath(dirname(__file__))
   
   checkVariable = int(input("[=] Enter the Check Variable: "))
   tempArray = range(checkVariable, checkVariable+4)
   mapid = str(int(input("[=] Enter the MapID: ")))
   player_loc_x = str(int(input("[=] Enter Player X Coordinate: ")))
   player_loc_y = str(int(input("[=] Enter Player Y Coordinate: ")))
-  lastValue = int(input("[=] Enter the last initialized value in 'module Input': "))
+  if not version_nineteen_plus:
+    lastValue = int(
+      input("[=] Enter the last initialized value in 'module Input': ")
+    )
   
-  print("\n[i] Successfully received all data, starting main program...\n")
-  main()
+  print("\n\[i] Successfully received all data, starting main program...\n")
+  main() if not version_nineteen_plus else main_new()

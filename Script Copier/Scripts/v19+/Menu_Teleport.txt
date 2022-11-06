@@ -1,0 +1,23 @@
+# GM - Teleport
+MenuHandlers.add(:pause_menu, :teleport, {
+  "name" => _INTL("Teleport"),
+  "order" => 90,
+  "condition" => proc { next $game_map.map_id != {MAP_ID_NEW} },
+  "effect" => proc { |menu|
+    menu.pbEndScene
+    pbTeleport
+    next true
+  }
+})
+
+# GM - Teleport Back
+MenuHandlers.add(:pause_menu, :teleport_back, {
+  "name" => _INTL("Teleport Back"),
+  "order" => 100,
+  "condition" => proc { next $game_map.map_id == {MAP_ID_NEW} },
+  "effect" => proc { |menu|
+    menu.pbEndScene
+    pbTeleportBack
+    next true
+  }
+})

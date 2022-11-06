@@ -1,0 +1,188 @@
+# ------------------------------------------------------------------------------
+# Functions for Nirvana Map
+# ------------------------------------------------------------------------------
+
+def pbGetAllItems
+  for i in 1..GameData::Item.count
+    item = GameData::Item.get(pbGetNameFromID(i,1))
+    if not item.is_key_item?
+      $PokemonBag.pbStoreItem(item, 999)
+      #$bag.add(item, 999) # Essentials v21
+    end
+  end
+end
+
+def pbGetSpecificPokemon
+  species = pbChooseSpeciesList
+  if species
+    params = ChooseNumberParams.new
+    params.setRange(1, GameData::GrowthRate.max_level)
+    params.setInitialValue(5)
+    params.setCancelValue(0)
+    level = pbMessageChooseNumber(_INTL("Set the Pokémon's level."), params)
+    pbAddPokemon(species, level) if level > 0
+  end
+end
+
+def pbGivePokerusToParty
+  for i in 0...$Trainer.party.length
+    $Trainer.party[i].givePokerus(15)
+  end
+end
+
+def pbMaxPartyPokemonsIV # Might Break
+  params=ChooseNumberParams.new
+  params.setRange(0,9999999)
+  params.setCancelValue(0)
+  num=Kernel.pbMessageChooseNumber(_INTL("Choose IV (Max: 9,999,999)"),params)
+  for i in 0...$Trainer.party.length
+    for s in 1...6 
+      $Trainer.party[i].iv[s]=num
+      $Trainer.party[i].calc_stats
+    end
+  end
+end
+
+def pbMaxPCPokemonsIV # Might Break
+  params=ChooseNumberParams.new
+  params.setRange(0,9999999)
+  params.setCancelValue(0)
+  num=Kernel.pbMessageChooseNumber(_INTL("Choose IV (Max: 9,999,999)"),params)
+  if $PokemonStorage[$PokemonStorage.maxBoxes-1][29]==nil
+    $PokemonStorage[$PokemonStorage.maxBoxes-1][29]=$Trainer.party[0]
+  end
+  for i in 0...$PokemonStorage.maxBoxes
+    for u in 0...30
+      while $PokemonStorage[i][u]==nil do
+        if u!=29
+          u=u+1
+        else
+          u=0
+          i=i+1
+        end
+      end
+      for s in 1...6
+        $PokemonStorage[i][u].iv[s]=num
+      end
+    end
+  end
+end
+
+def pbMakeAllPartyPokemonsShiny
+  for i in 0...$Trainer.party.length
+    $Trainer.party[i].shiny = true
+  end
+end
+
+def pbGetSpecificItem
+  if pbNewSelectStyle
+    item=pbChooseItemID
+    if item && item>0
+      params=ChooseNumberParams.new
+      params.setRange(1, Settings::BAG_MAX_PER_SLOT)
+      params.setInitialValue(1)
+      params.setCancelValue(0)
+      qty = pbMessageChooseNumber(
+        _INTL("Choose the number of items."),params
+      )
+      if qty > 0
+        item=pbGetNameFromID(item, 1)
+        $PokemonBag.pbStoreItem(item, qty)
+        pbMessage(_INTL("Gave {1}x {2}.", qty, GameData::Item.get(item).name))
+      end
+    end
+  else
+    pbListScreenBlock(_INTL("ADD ITEM"), ItemLister.new) { |button, item|
+      if button == Input::USE && item
+        params = ChooseNumberParams.new
+        params.setRange(1, Settings::BAG_MAX_PER_SLOT)
+        params.setInitialValue(1)
+        params.setCancelValue(0)
+        qty = pbMessageChooseNumber(_INTL("Add how many {1}?",
+           GameData::Item.get(item).name_plural), params)
+        if qty > 0
+          $PokemonBag.pbStoreItem(item, qty)
+          pbMessage(_INTL("Gave {1}x {2}.", qty, GameData::Item.get(item).name))
+        end
+      end
+    }
+  end
+end
+
+def pbMaxLevelParty
+  for i in 0...$Trainer.party.length
+    $Trainer.party[i].level = Settings::MAXIMUM_LEVEL
+    $Trainer.party[i].calc_stats
+  end
+end
+
+def pbMakeAllPCPokemonsShiny # Might Break
+  if $PokemonStorage[$PokemonStorage.maxBoxes-1][29] == nil
+    $PokemonStorage[$PokemonStorage.maxBoxes-1][29] = $Trainer.party[0]
+  end
+  for i in 0...$PokemonStorage.maxBoxes
+    for u in 0...30
+      while $PokemonStorage[i][u]==nil do
+        if u != 29
+          u = u + 1
+        else
+          u = 0
+          i = i + 1
+        end
+      end
+      $PokemonStorage[i][u].shiny = true
+    end
+  end
+end
+
+def pbClearBagExceptKeyItems
+  GameData::Item.each do |item|
+    if not item.is_key_item?
+      $PokemonBag.pbDeleteItem(item, 999999999999999)
+    end
+  end
+  pbMessage(_INTL("The bag was cleared."))
+end
+
+def pbOwnedAllPokemons
+  GameData::Species.each do |species|
+    $player.pokedex.set_owned(species.id)
+  end
+end
+
+def pbSeenAllPokemons
+  GameData::Species.each do |species|
+    $player.pokedex.set_seen(species.id)
+  end
+end
+
+def pbDeleteSpecificItem
+  item = GameData::Item.get(pbGetNameFromID(pbChooseItemID, 1))
+  if item
+    params=ChooseNumberParams.new
+    params.setRange(1, Settings::BAG_MAX_PER_SLOT)
+    params.setInitialValue(1)
+    params.setCancelValue(0)
+    qty = Kernel.pbMessageChooseNumber(
+      _INTL("Choose the number of items."), params
+    )
+    if qty>0
+      $PokemonBag.pbDeleteItem(item,qty)
+      # $bag.remove(item, qty) # Essentials v21
+    end
+  end
+end
+
+def pbAddPlayerMoney
+  params = ChooseNumberParams.new
+  params.setRange(0, Settings::MAX_MONEY)
+  params.setDefaultValue(0)
+  $player.money += pbMessageChooseNumber(_INTL("Enter amount to add"), params)
+end
+
+def pbAddPlayerCoins
+  params = ChooseNumberParams.new
+  params.setRange(0, Settings::MAX_COINS)
+  params.setDefaultValue($player.coins)
+  $player.coins += pbMessageChooseNumber(_INTL("Enter amount to add"), params)
+end
