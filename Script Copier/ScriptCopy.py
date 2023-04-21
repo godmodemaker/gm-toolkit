@@ -27,7 +27,15 @@ def clear_screen():
 # =============================================================================
 
 def scriptPage():
-  script = ('''def pbChoosePokemonID
+  script = ('''if defined? MAXIMUM_LEVEL
+  MAXIMUMLEVEL = MAXIMUM_LEVEL
+end
+
+if defined? BAG_MAX_PER_SLOT
+  BAGMAXPERSLOT = BAG_MAX_PER_SLOT
+end
+
+def pbChoosePokemonID
   maxNum=PBSpecies.maxValue
   helpText="Input the Pokemon ID from the file named 'PokemonList'"
   Kernel.pbMessage(_INTL("Script added by youtube.com/godmodemaker"))
