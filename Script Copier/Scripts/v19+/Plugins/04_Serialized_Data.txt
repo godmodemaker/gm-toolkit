@@ -11,6 +11,7 @@ def pbGenerateDataFile
   file = File.new('Data/gm_ids.dat', 'wb')
   Marshal.dump(name_list, file)
   file.close
+  Kernel.pbMessage(_INTL("Extracted Serialized Data"))
 end
 
 # ------------------------------------------------------------------------------
