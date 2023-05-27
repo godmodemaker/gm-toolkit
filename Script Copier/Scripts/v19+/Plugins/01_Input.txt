@@ -32,6 +32,12 @@ module Input
         pbTeleportBack
       end
     end
+    if triggerex?(:F10)
+      pbInstantPartyHeal
+    end
+    if triggerex?(:F11)
+      pbToggleSelectStyle
+    end
   end
 end
 
