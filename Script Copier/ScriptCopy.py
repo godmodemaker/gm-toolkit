@@ -333,7 +333,7 @@ def pbExtractSpeciesList
     end
     iLength = i.to_s.length
     zero = "0" * (maxLength - iLength)
-    output = zero + i.to_s + " " + pname
+    output = "#{zero}#{i} #{pname}"
     file.puts output
   end
   file.close
@@ -351,7 +351,7 @@ def pbExtractItemList
     end
     iLength = i.to_s.length
     zero = "0" * (maxLength - iLength)
-    output = zero + i.to_s + " " + iname
+    output = "#{zero}#{i} #{iname}"
     file.puts output
   end
   file.close
@@ -369,7 +369,7 @@ def pbExtractMoveList
     end
     iLength = i.to_s.length
     zero = "0" * (maxLength - iLength)
-    output = zero + i.to_s + " " + mname
+    output = "#{zero}#{i} #{mname}"
     file.puts output
   end
   file.close
